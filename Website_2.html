@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The BRIGS — Brigadeiro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #FFF8F0;
+      --brown:    #2C1503;
+      --choco:    #5C2E00;
+      --yellow:   #FFD23F;
+      --pink:     #FF6B9D;
+      --cream:    #FFF3E0;
+      --muted:    #9E7A5A;
+      --card-bg:  #FFFFFF;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--brown);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 400;
+      line-height: 1.7;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: var(--brown);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 40px;
+    }
+
+    .nav-logo {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.4rem;
+      color: var(--yellow);
+      text-decoration: none;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 28px;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--yellow); }
+
+    /* ── HAMBURGER ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--yellow);
+      transition: all 0.25s;
+    }
+
+    .mobile-nav {
+      display: none;
+      flex-direction: column;
+      position: fixed;
+      top: 54px;
+      left: 0; right: 0;
+      background: var(--brown);
+      padding: 12px 0;
+      z-index: 99;
+    }
+
+    .mobile-nav.open { display: flex; }
+
+    .mobile-nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 14px 40px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      transition: color 0.2s;
+    }
+
+    .mobile-nav a:hover { color: var(--yellow); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      background: var(--brown);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-blob {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(80px);
+      opacity: 0.25;
+    }
+
+    .blob-1 {
+      width: 500px; height: 500px;
+      background: var(--yellow);
+      top: -100px; left: -150px;
+    }
+
+    .blob-2 {
+      width: 400px; height: 400px;
+      background: var(--pink);
+      bottom: -80px; right: -100px;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--brown);
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      border-radius: 99px;
+      margin-bottom: 28px;
+    }
+
+    #hero h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(3.5rem, 12vw, 8rem);
+      color: #fff;
+      line-height: 1.1;
+    }
+
+    #hero h1 span { color: var(--yellow); }
+
+    .hero-sub {
+      margin-top: 20px;
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.65);
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-btns {
+      margin-top: 40px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: var(--yellow);
+      color: var(--brown);
+      padding: 14px 32px;
+      border-radius: 99px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform 0.15s, background 0.2s;
+      display: inline-block;
+    }
+
+    .btn-primary:hover { transform: scale(1.04); background: #ffe066; }
+
+    .btn-outline {
+      border: 2px solid #fff;
+      color: #fff;
+      padding: 14px 32px;
+      border-radius: 99px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform 0.15s, background 0.2s, color 0.2s;
+      display: inline-block;
+    }
+
+    .btn-outline:hover { background: #fff; color: var(--brown); transform: scale(1.04); }
+
+    /* ── WAVE DIVIDER ── */
+    .wave {
+      display: block;
+      width: 100%;
+      overflow: hidden;
+      line-height: 0;
+    }
+
+    .wave svg { display: block; width: 100%; }
+
+    /* ── WHAT IS ── */
+    #what {
+      background: var(--cream);
+      padding: 80px 24px;
+    }
+
+    #what .inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--pink);
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      color: var(--brown);
+      line-height: 1.3;
+      margin-bottom: 16px;
+    }
+
+    .section-body {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.9;
+    }
+
+    .fun-badge {
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--brown);
+      font-weight: 800;
+      font-size: 0.8rem;
+      padding: 6px 14px;
+      border-radius: 99px;
+      margin-top: 20px;
+    }
+
+    .allergy-box {
+      background: #fff;
+      border-left: 4px solid var(--pink);
+      border-radius: 0 12px 12px 0;
+      padding: 20px 24px;
+      margin-top: 16px;
+    }
+
+    .allergy-box p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .allergy-box strong { color: var(--brown); }
+
+    /* ── FLAVORS ── */
+    #flavors {
+      background: var(--bg);
+      padding: 80px 24px;
+      text-align: center;
+    }
+
+    #flavors .inner { max-width: 1100px; margin: 0 auto; }
+
+    .flavors-note {
+      display: inline-block;
+      background: var(--pink);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 8px 20px;
+      border-radius: 99px;
+      margin: 16px auto 40px;
+    }
+
+    .flavor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 14px;
+      text-align: left;
+    }
+
+    .flavor-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 18px 20px;
+      border: 2px solid transparent;
+      box-shadow: 0 2px 12px rgba(44,21,3,0.06);
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+
+    .flavor-card:hover {
+      border-color: var(--yellow);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(44,21,3,0.1);
+    }
+
+    .flavor-name {
+      font-weight: 800;
+      font-size: 0.92rem;
+      color: var(--brown);
+      margin-bottom: 3px;
+    }
+
+    .flavor-desc {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    /* ── PRICING ── */
+    #pricing {
+      background: var(--brown);
+      padding: 80px 24px;
+    }
+
+    #pricing .inner { max-width: 900px; margin: 0 auto; text-align: center; }
+
+    #pricing .section-label { color: var(--yellow); }
+    #pricing .section-title { color: #fff; }
+    #pricing .section-body { color: rgba(255,255,255,0.55); margin: 0 auto 48px; max-width: 500px; }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .pricing-card {
+      background: rgba(255,255,255,0.07);
+      border: 2px solid rgba(255,255,255,0.12);
+      border-radius: 24px;
+      padding: 40px 32px;
+      position: relative;
+      text-align: left;
+      transition: border-color 0.2s;
+    }
+
+    .pricing-card:hover { border-color: rgba(255,210,63,0.5); }
+
+    .pricing-card.featured {
+      border-color: var(--yellow);
+      background: rgba(255,210,63,0.08);
+    }
+
+    .pricing-badge {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--yellow);
+      color: var(--brown);
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 5px 16px;
+      border-radius: 99px;
+      white-space: nowrap;
+    }
+
+    .pricing-label {
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--yellow);
+      margin-bottom: 8px;
+    }
+
+    .pricing-name {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.6rem;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .pricing-price {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--yellow);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .pricing-qty {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 20px;
+    }
+
+    .pricing-note {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.8;
+      margin-bottom: 28px;
+    }
+
+    .pricing-note strong { color: var(--yellow); }
+
+    .btn-yellow {
+      background: var(--yellow);
+      color: var(--brown);
+      padding: 12px 28px;
+      border-radius: 99px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform 0.15s;
+    }
+
+    .btn-yellow:hover { transform: scale(1.04); }
+
+    /* ── ORDER ── */
+    #order {
+      background: var(--bg);
+      padding: 80px 24px;
+      text-align: center;
+    }
+
+    #order .inner { max-width: 1000px; margin: 0 auto; }
+
+    .order-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 56px;
+      text-align: left;
+    }
+
+    .step-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 32px 28px;
+      box-shadow: 0 4px 20px rgba(44,21,3,0.07);
+    }
+
+    .step-number {
+      font-family: 'Pacifico', cursive;
+      font-size: 2.8rem;
+      color: var(--yellow);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .step-title {
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--brown);
+      margin-bottom: 10px;
+    }
+
+    .step-body {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .order-cta {
+      margin-top: 56px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .order-cta p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--brown);
+      text-align: center;
+      padding: 48px 24px;
+    }
+
+    .footer-logo {
+      font-family: 'Pacifico', cursive;
+      font-size: 2rem;
+      color: var(--yellow);
+      margin-bottom: 10px;
+    }
+
+    footer p {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.9;
+    }
+
+    footer a { color: var(--yellow); text-decoration: none; }
+
+    .footer-dot {
+      width: 6px; height: 6px;
+      background: var(--yellow);
+      border-radius: 50%;
+      margin: 20px auto;
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      nav { padding: 14px 20px; }
+      nav ul { display: none; }
+      .hamburger { display: flex; }
+
+      #what .inner { grid-template-columns: 1fr; gap: 40px; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .order-steps { grid-template-columns: 1fr; gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#hero" class="nav-logo">The BRIGS</a>
+    <ul>
+      <li><a href="#flavors">Flavors</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#order">Order</a></li>
+    </ul>
+    <button class="hamburger" id="menuBtn" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#flavors" onclick="closeMobileNav()">Flavors</a>
+    <a href="#pricing" onclick="closeMobileNav()">Pricing</a>
+    <a href="#order" onclick="closeMobileNav()">Order</a>
+  </div>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-blob blob-1"></div>
+    <div class="hero-blob blob-2"></div>
+    <div class="hero-content">
+      <span class="hero-tag">Handcrafted Brigadeiros · Winnipeg</span>
+      <h1>The <span>BRIGS</span></h1>
+      <p class="hero-sub">Brazilian chocolate truffles rolled fresh in 20+ flavors. Indulgent, addictive, and unlike anything you've tried.</p>
+      <div class="hero-btns">
+        <a href="#flavors" class="btn-primary">See Flavors</a>
+        <a href="#order" class="btn-outline">Order Now</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- WAVE -->
+  <div class="wave" style="background:var(--brown);">
+    <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,0 C360,60 1080,60 1440,0 L1440,60 L0,60 Z" fill="#FFF3E0"/>
+    </svg>
+  </div>
+
+  <!-- WHAT IS -->
+  <div id="what">
+    <div class="inner">
+      <div>
+        <p class="section-label">What is Brigadeiro?</p>
+        <h2 class="section-title">Brazil's favourite little treat.</h2>
+        <p class="section-body">
+          Brigadeiro is a classic Brazilian sweet — made with cream, sweetened condensed milk, and chocolate, then rolled into a ball and coated in toppings. Rich, smooth, and completely addictive.
+        </p>
+        <span class="fun-badge">20+ Rotating Flavors</span>
+      </div>
+      <div>
+        <p class="section-label">Good to Know</p>
+        <div class="allergy-box">
+          <p>Most of our brigadeiros are <strong>gluten-free</strong> and <strong>peanut-free</strong>. Made with milk ingredients (cream and sweetened condensed milk).</p>
+          <p style="margin-top:10px;">Have a <strong>peanut or gluten allergy?</strong> Just let us know when you order.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WAVE -->
+  <div class="wave" style="background:var(--cream);">
+    <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,60 C360,0 1080,0 1440,60 L1440,0 L0,0 Z" fill="#FFF8F0"/>
+    </svg>
+  </div>
+
+  <!-- FLAVORS -->
+  <section id="flavors">
+    <div class="inner">
+      <p class="section-label">The Menu</p>
+      <h2 class="section-title">Pick Your Flavors</h2>
+      <p class="section-body" style="max-width:500px; margin:0 auto;">We're always making new ones. Availability rotates weekly.</p>
+      <span class="flavors-note">Contact us to confirm what's available this week</span>
+
+      <div class="flavor-grid">
+        <div class="flavor-card"><p class="flavor-name">The One</p><p class="flavor-desc">Chocolate</p></div>
+        <div class="flavor-card"><p class="flavor-name">Coconut Kiss</p><p class="flavor-desc">Coconut</p></div>
+        <div class="flavor-card"><p class="flavor-name">Milk Way</p><p class="flavor-desc">White Chocolate</p></div>
+        <div class="flavor-card"><p class="flavor-name">Oh Nuts</p><p class="flavor-desc">Peanuts</p></div>
+        <div class="flavor-card"><p class="flavor-name">Mini Eggs</p><p class="flavor-desc">Mini Eggs</p></div>
+        <div class="flavor-card"><p class="flavor-name">Dark Side</p><p class="flavor-desc">Dark Chocolate</p></div>
+        <div class="flavor-card"><p class="flavor-name">Mint Me</p><p class="flavor-desc">Mint Chocolate</p></div>
+        <div class="flavor-card"><p class="flavor-name">Candy Cane</p><p class="flavor-desc">Candy Cane</p></div>
+        <div class="flavor-card"><p class="flavor-name">Triple Chocolate</p><p class="flavor-desc">Milk, White + Dark</p></div>
+        <div class="flavor-card"><p class="flavor-name">Banana Chocolate</p><p class="flavor-desc">Banana Chocolate</p></div>
+        <div class="flavor-card"><p class="flavor-name">Sunburst</p><p class="flavor-desc">Orange Milk Chocolate</p></div>
+        <div class="flavor-card"><p class="flavor-name">Orange</p><p class="flavor-desc">Orange White Chocolate</p></div>
+        <div class="flavor-card"><p class="flavor-name">Lemon Pie</p><p class="flavor-desc">Lemon</p></div>
+        <div class="flavor-card"><p class="flavor-name">Strawberry Cheese</p><p class="flavor-desc">Strawberry Cheesecake</p></div>
+        <div class="flavor-card"><p class="flavor-name">Blueberry Cheesecake</p><p class="flavor-desc">Blueberry Cheesecake</p></div>
+        <div class="flavor-card"><p class="flavor-name">Cinnaball</p><p class="flavor-desc">Cinnamon Cookie</p></div>
+        <div class="flavor-card"><p class="flavor-name">Ginger Man</p><p class="flavor-desc">Gingerbread</p></div>
+        <div class="flavor-card"><p class="flavor-name">Hot Cocoa</p><p class="flavor-desc">Chocolate + Marshmallow</p></div>
+        <div class="flavor-card"><p class="flavor-name">Coffee</p><p class="flavor-desc">Coffee</p></div>
+        <div class="flavor-card"><p class="flavor-name">Cranberry</p><p class="flavor-desc">Cranberry Cookie</p></div>
+        <div class="flavor-card"><p class="flavor-name">Hershey's Kisses</p><p class="flavor-desc">Kisses + Dark Chocolate</p></div>
+        <div class="flavor-card"><p class="flavor-name">Choco Chips</p><p class="flavor-desc">Chocolate + Potato Chips</p></div>
+        <div class="flavor-card"><p class="flavor-name">Choco Crispy</p><p class="flavor-desc">Chocolate + Rice Crispy</p></div>
+        <div class="flavor-card"><p class="flavor-name">Pumpkin Spice</p><p class="flavor-desc">Pumpkin Spice</p></div>
+        <div class="flavor-card"><p class="flavor-name">Rainbow</p><p class="flavor-desc">White Chocolate + Rainbow Sprinkles</p></div>
+        <div class="flavor-card"><p class="flavor-name">Marble</p><p class="flavor-desc">White + Milk Chocolate</p></div>
+        <div class="flavor-card"><p class="flavor-name">Almond Coconut</p><p class="flavor-desc">Almond Coconut</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <div id="pricing">
+    <div class="inner">
+      <p class="section-label">Pricing</p>
+      <h2 class="section-title">Choose Your Tray</h2>
+      <p class="section-body">Simple pricing. Pay by cash or e-transfer.</p>
+
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <p class="pricing-label">Regular Tray</p>
+          <p class="pricing-name">The Classic</p>
+          <p class="pricing-price">$15</p>
+          <p class="pricing-qty">15 brigadeiros</p>
+          <p class="pricing-note">Perfect for a personal treat or sharing with a small group.</p>
+          <a href="https://wa.me/14312755071?text=Hi!%20I'd%20like%20to%20order%20a%20Regular%20Tray%20(15%20brigadeiros)." class="btn-yellow" target="_blank">Order Now</a>
+        </div>
+        <div class="pricing-card featured">
+          <span class="pricing-badge">Order Ahead</span>
+          <p class="pricing-label">Party Tray</p>
+          <p class="pricing-name">The Party</p>
+          <p class="pricing-price">$60</p>
+          <p class="pricing-qty">65 brigadeiros</p>
+          <p class="pricing-note"><strong>Order ahead required.</strong> Perfect for events, gatherings, or gifting.</p>
+          <a href="https://wa.me/14312755071?text=Hi!%20I'd%20like%20to%20order%20a%20Party%20Tray%20(65%20brigadeiros)." class="btn-yellow" target="_blank">Order Ahead</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WAVE -->
+  <div class="wave" style="background:var(--brown);">
+    <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,0 C360,60 1080,60 1440,0 L1440,60 L0,60 Z" fill="#FFF8F0"/>
+    </svg>
+  </div>
+
+  <!-- ORDER -->
+  <section id="order">
+    <div class="inner">
+      <p class="section-label">How It Works</p>
+      <h2 class="section-title">Order in 3 Steps</h2>
+
+      <div class="order-steps">
+        <div class="step-card">
+          <p class="step-number">01</p>
+          <p class="step-title">Send Us a Message</p>
+          <p class="step-body">Text or WhatsApp us. Tell us which tray, how many, and which flavors — we'll confirm what's available this week.</p>
+        </div>
+        <div class="step-card">
+          <p class="step-number">02</p>
+          <p class="step-title">Confirm Your Order</p>
+          <p class="step-body">We'll lock in your flavors, quantity, and pickup time. Party trays need advance notice — message us early!</p>
+        </div>
+        <div class="step-card">
+          <p class="step-number">03</p>
+          <p class="step-title">Pay &amp; Pick Up</p>
+          <p class="step-body">Cash or e-transfer. Pick up fresh and enjoy your brigadeiros.</p>
+        </div>
+      </div>
+
+      <div class="order-cta">
+        <p>Ready? Let's get your order in.</p>
+        <a href="https://wa.me/14312755071?text=Hi!%20I'd%20like%20to%20place%20an%20order." class="btn-primary" target="_blank">Text or WhatsApp Us</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p class="footer-logo">The BRIGS</p>
+    <p>Handcrafted Brigadeiros · Winnipeg, MB</p>
+    <div class="footer-dot"></div>
+    <p>Made with love by Igor Santanna</p>
+    <p style="margin-top:8px; font-size:0.65rem; opacity:0.4;">Site by <a href="https://fjdmedia.github.io/FJMedia" target="_blank" style="color: var(--brown);">FJMedia</a></p>
+  </footer>
+
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileNav = document.getElementById('mobileNav');
+    menuBtn.addEventListener('click', () => mobileNav.classList.toggle('open'));
+    function closeMobileNav() { mobileNav.classList.remove('open'); }
+  </script>
+
+</body>
+</html>

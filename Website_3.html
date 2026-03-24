@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The BRIGS — Brigadeiro</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:      #0F0500;
+      --off-white:  #1E0A00;
+      --rust:       #C9A227;
+      --rust-light: #E8C76A;
+      --sand:       #2A1200;
+      --muted:      #9E8A70;
+      --white:      #F5ECD7;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--off-white);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 48px;
+      background: var(--off-white);
+      border-bottom: 1px solid rgba(201,162,39,0.15);
+    }
+
+    .nav-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.25rem;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: 1px;
+    }
+
+    .nav-logo span { color: var(--rust); font-style: italic; }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 36px;
+    }
+
+    nav a {
+      color: var(--white);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--rust); }
+
+    .nav-cta {
+      background: var(--rust);
+      color: var(--white) !important;
+      padding: 10px 22px;
+      border-radius: 4px;
+      transition: background 0.2s !important;
+    }
+
+    .nav-cta:hover { background: var(--rust-light) !important; color: var(--white) !important; }
+
+    /* ── HAMBURGER ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--rust);
+      transition: all 0.25s;
+    }
+
+    .mobile-nav {
+      display: none;
+      flex-direction: column;
+      position: fixed;
+      top: 65px;
+      left: 0; right: 0;
+      background: var(--off-white);
+      border-bottom: 1px solid rgba(201,162,39,0.15);
+      padding: 12px 0;
+      z-index: 99;
+    }
+
+    .mobile-nav.open { display: flex; }
+
+    .mobile-nav a {
+      color: var(--white);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 14px 40px;
+      border-bottom: 1px solid rgba(201,162,39,0.1);
+      transition: color 0.2s;
+    }
+
+    .mobile-nav a:hover { color: var(--rust); }
+
+    /* ── HERO ── */
+    #hero {
+      padding-top: 85px;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: stretch;
+    }
+
+    .hero-left {
+      background: var(--black);
+      padding: 80px 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .hero-eyebrow span {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--rust);
+    }
+
+    .eyebrow-line {
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.15);
+    }
+
+    .hero-left h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(3.5rem, 6vw, 6rem);
+      color: var(--white);
+      line-height: 1.0;
+      margin-bottom: 8px;
+    }
+
+    .hero-left h1 em {
+      font-style: italic;
+      color: var(--rust);
+    }
+
+    .hero-tagline {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.5);
+      margin-top: 24px;
+      margin-bottom: 48px;
+      max-width: 380px;
+      line-height: 1.8;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn-rust {
+      background: var(--rust);
+      color: var(--white);
+      padding: 14px 30px;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s;
+      display: inline-block;
+    }
+
+    .btn-rust:hover { background: var(--rust-light); }
+
+    .btn-ghost {
+      border: 1px solid rgba(255,255,255,0.3);
+      color: var(--white);
+      padding: 14px 30px;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s;
+      display: inline-block;
+    }
+
+    .btn-ghost:hover { border-color: var(--white); background: rgba(255,255,255,0.08); }
+
+    .hero-right {
+      background: var(--rust);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 80px 56px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-right::before {
+      content: 'B';
+      font-family: 'DM Serif Display', serif;
+      font-size: 32vw;
+      color: rgba(0,0,0,0.08);
+      position: absolute;
+      bottom: -60px;
+      right: -40px;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .hero-stat {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 40px;
+    }
+
+    .hero-stat-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 4.5rem;
+      color: var(--white);
+      line-height: 1;
+    }
+
+    .hero-stat-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      margin-top: 4px;
+    }
+
+    .hero-divider {
+      width: 40px;
+      height: 1px;
+      background: rgba(255,255,255,0.3);
+      margin: 32px 0;
+    }
+
+    /* ── TICKER ── */
+    .ticker {
+      background: var(--black);
+      padding: 14px 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .ticker-inner {
+      display: inline-block;
+      animation: ticker 30s linear infinite;
+    }
+
+    .ticker-inner span {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-right: 40px;
+    }
+
+    .ticker-inner span.dot { color: var(--rust); margin-right: 40px; }
+
+    @keyframes ticker {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ── WHAT IS ── */
+    #what {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 500px;
+    }
+
+    .what-left {
+      background: var(--sand);
+      padding: 80px 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .section-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+
+    .section-body {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.9;
+      max-width: 420px;
+    }
+
+    .what-right {
+      background: var(--off-white);
+      padding: 80px 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-left: 1px solid rgba(13,13,13,0.08);
+    }
+
+    .allergy-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(201,162,39,0.15);
+    }
+
+    .allergy-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+    .allergy-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--rust);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: 0.5px;
+    }
+
+    .allergy-text p:first-child {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+
+    .allergy-text p:last-child {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* ── FLAVORS ── */
+    #flavors {
+      padding: 96px 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .flavors-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .flavors-note {
+      background: var(--black);
+      color: var(--white);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 10px 20px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .flavor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 2px;
+    }
+
+    .flavor-card {
+      background: var(--sand);
+      padding: 20px 22px;
+      border: 1px solid transparent;
+      transition: background 0.2s, border-color 0.2s;
+      cursor: default;
+    }
+
+    .flavor-card:hover {
+      background: var(--rust);
+      border-color: var(--rust);
+    }
+
+    .flavor-card:hover .flavor-name { color: var(--black); }
+    .flavor-card:hover .flavor-desc { color: var(--black); }
+
+    .flavor-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1rem;
+      color: var(--white);
+      margin-bottom: 4px;
+      transition: color 0.2s;
+    }
+
+    .flavor-desc {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    /* ── PRICING ── */
+    #pricing {
+      background: var(--black);
+      padding: 96px 48px;
+    }
+
+    #pricing .inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    #pricing .section-label { color: var(--rust); }
+    #pricing .section-title { color: var(--white); }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin-top: 56px;
+    }
+
+    .pricing-card {
+      background: rgba(255,255,255,0.04);
+      padding: 52px 48px;
+      border: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+      transition: background 0.2s;
+    }
+
+    .pricing-card:hover { background: rgba(255,255,255,0.07); }
+
+    .pricing-card.featured {
+      background: var(--rust);
+      border-color: var(--rust);
+    }
+
+    .pricing-card.featured:hover { background: var(--rust-light); }
+
+    .pricing-badge {
+      position: absolute;
+      top: 24px; right: 24px;
+      background: var(--white);
+      color: var(--rust);
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 2px;
+    }
+
+    .pricing-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 12px;
+    }
+
+    .pricing-card.featured .pricing-label { color: rgba(255,255,255,0.7); }
+
+    .pricing-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem;
+      color: var(--white);
+      margin-bottom: 20px;
+    }
+
+    .pricing-price {
+      font-family: 'DM Serif Display', serif;
+      font-size: 4.5rem;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .pricing-qty {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 28px;
+      font-weight: 500;
+    }
+
+    .pricing-card.featured .pricing-qty { color: rgba(255,255,255,0.65); }
+
+    .pricing-note {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.8;
+      margin-bottom: 36px;
+    }
+
+    .pricing-card.featured .pricing-note { color: rgba(255,255,255,0.75); }
+
+    .btn-white {
+      background: var(--white);
+      color: var(--black);
+      padding: 14px 30px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s;
+    }
+
+    .btn-white:hover { background: var(--off-white); }
+
+    .btn-black {
+      background: var(--black);
+      color: var(--white);
+      padding: 14px 30px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s;
+    }
+
+    .btn-black:hover { background: #222; }
+
+    /* ── ORDER ── */
+    #order {
+      padding: 96px 48px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .order-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 80px;
+      align-items: start;
+      margin-top: 56px;
+    }
+
+    .order-intro .section-body {
+      margin-bottom: 32px;
+    }
+
+    .order-steps { display: flex; flex-direction: column; gap: 0; }
+
+    .step {
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 24px;
+      padding: 28px 0;
+      border-bottom: 1px solid rgba(201,162,39,0.15);
+      align-items: start;
+    }
+
+    .step:first-child { border-top: 1px solid rgba(201,162,39,0.15); }
+
+    .step-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem;
+      color: var(--rust);
+      line-height: 1;
+    }
+
+    .step-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+
+    .step-body {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--black);
+      padding: 56px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
+      border-top: 3px solid var(--rust);
+    }
+
+    .footer-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      color: var(--white);
+    }
+
+    .footer-logo em { font-style: italic; color: var(--rust); }
+
+    footer p {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.35);
+      line-height: 1.8;
+    }
+
+    footer a { color: var(--rust); text-decoration: none; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      nav { padding: 16px 20px; }
+      nav ul { display: none; }
+      .nav-cta-desktop { display: none; }
+      .hamburger { display: flex; }
+
+      #hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .hero-left { padding: 60px 28px; }
+
+      #what { grid-template-columns: 1fr; }
+      .what-left, .what-right { padding: 60px 28px; }
+
+      #flavors, #order { padding: 60px 24px; }
+      .flavors-header { flex-direction: column; align-items: flex-start; }
+
+      #pricing { padding: 60px 24px; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .pricing-card { padding: 40px 28px; }
+
+      .order-grid { grid-template-columns: 1fr; gap: 40px; }
+
+      footer { flex-direction: column; align-items: flex-start; padding: 40px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#hero" class="nav-logo">The <span>BRIGS</span></a>
+    <ul>
+      <li><a href="#flavors">Flavors</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#order">Order</a></li>
+      <li><a href="https://wa.me/14312755071?text=Hi!%20I'd%20like%20to%20place%20an%20order." class="nav-cta nav-cta-desktop" target="_blank">Order Now</a></li>
+    </ul>
+    <button class="hamburger" id="menuBtn" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#flavors" onclick="closeMobileNav()">Flavors</a>
+    <a href="#pricing" onclick="closeMobileNav()">Pricing</a>
+    <a href="#order" onclick="closeMobileNav()">Order</a>
+    <a href="https://wa.me/14312755071?text=Hi!%20I'd%20like%20to%20place%20an%20order." target="_blank" onclick="closeMobileNav()">Order Now</a>
+  </div>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-left">
+      <div class="hero-eyebrow">
+        <span>Winnipeg, MB</span>
+        <div class="eyebrow-line"></div>
+      </div>
+      <h1>The<br><em>BRIGS</em></h1>
+      <p class="hero-tagline">Handcrafted Brazilian brigadeiros rolled fresh in 20+ rotating flavors. Rich, indulgent, and unlike anything you've tried.</p>
+      <div class="hero-btns">
+        <a href="#flavors" class="btn-rust">See Flavors</a>
+        <a href="#order" class="btn-ghost">Order Now</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-stat">
+        <p class="hero-stat-number">27+</p>
+        <p class="hero-stat-label">Rotating Flavors</p>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat">
+        <p class="hero-stat-number">$15</p>
+        <p class="hero-stat-label">Starting Price</p>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat">
+        <p class="hero-stat-number">100%</p>
+        <p class="hero-stat-label">Handcrafted</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker">
+    <div class="ticker-inner">
+      <span>Brigadeiro</span><span class="dot">✦</span>
+      <span>Handcrafted</span><span class="dot">✦</span>
+      <span>Winnipeg</span><span class="dot">✦</span>
+      <span>27+ Flavors</span><span class="dot">✦</span>
+      <span>Cash or E-Transfer</span><span class="dot">✦</span>
+      <span>Order Ahead</span><span class="dot">✦</span>
+      <span>Brazilian Dessert</span><span class="dot">✦</span>
+      <span>Brigadeiro</span><span class="dot">✦</span>
+      <span>Handcrafted</span><span class="dot">✦</span>
+      <span>Winnipeg</span><span class="dot">✦</span>
+      <span>27+ Flavors</span><span class="dot">✦</span>
+      <span>Cash or E-Transfer</span><span class="dot">✦</span>
+      <span>Order Ahead</span><span class="dot">✦</span>
+      <span>Brazilian Dessert</span><span class="dot">✦</span>
+    </div>
+  </div>
+
+  <!-- WHAT IS -->
+  <div id="what">
+    <div class="what-left">
+      <p class="section-label">What is Brigadeiro?</p>
+      <h2 class="section-title">Brazil's most beloved sweet.</h2>
+      <p class="section-body">
+        A classic Brazilian confection made with cream, sweetened condensed milk, and chocolate — rolled into a ball and finished with toppings. Rich, smooth, completely addictive.
+      </p>
+    </div>
+    <div class="what-right">
+      <p class="section-label">Good to Know</p>
+      <div class="allergy-item">
+        <div class="allergy-icon">GF</div>
+        <div class="allergy-text">
+          <p>Mostly Gluten-Free</p>
+          <p>Most of our brigadeiros are gluten-free. Let us know if you have a gluten allergy when ordering.</p>
+        </div>
+      </div>
+      <div class="allergy-item">
+        <div class="allergy-icon">PF</div>
+        <div class="allergy-text">
+          <p>Mostly Peanut-Free</p>
+          <p>Most flavors are peanut-free. Have a peanut allergy? Just flag it when you order and we'll take care of you.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLAVORS -->
+  <section id="flavors">
+    <div class="flavors-header">
+      <div>
+        <p class="section-label">The Menu</p>
+        <h2 class="section-title">27+ Rotating Flavors</h2>
+      </div>
+      <span class="flavors-note">Contact us to confirm weekly availability</span>
+    </div>
+
+    <div class="flavor-grid">
+      <div class="flavor-card"><p class="flavor-name">The One</p><p class="flavor-desc">Chocolate</p></div>
+      <div class="flavor-card"><p class="flavor-name">Coconut Kiss</p><p class="flavor-desc">Coconut</p></div>
+      <div class="flavor-card"><p class="flavor-name">Milk Way</p><p class="flavor-desc">White Chocolate</p></div>
+      <div class="flavor-card"><p class="flavor-name">Oh Nuts</p><p class="flavor-desc">Peanuts</p></div>
+      <div class="flavor-card"><p class="flavor-name">Mini Eggs</p><p class="flavor-desc">Mini Eggs</p></div>
+      <div class="flavor-card"><p class="flavor-name">Dark Side</p><p class="flavor-desc">Dark Chocolate</p></div>
+      <div class="flavor-card"><p class="flavor-name">Mint Me</p><p class="flavor-desc">Mint Chocolate</p></div>
+      <div class="flavor-card"><p class="flavor-name">Candy Cane</p><p class="flavor-desc">Candy Cane</p></div>
+      <div class="flavor-card"><p class="flavor-name">Triple Chocolate</p><p class="flavor-desc">Milk, White + Dark</p></div>
+      <div class="flavor-card"><p class="flavor-name">Banana Chocolate</p><p class="flavor-desc">Banana Chocolate</p></div>
+      <div class="flavor-card"><p class="flavor-name">Sunburst</p><p class="flavor-desc">Orange Milk Chocolate</p></div>
+      <div class="flavor-card"><p class="flavor-name">Orange</p><p class="flavor-desc">Orange White Chocolate</p></div>
+      <div class="flavor-card"><p class="flavor-name">Lemon Pie</p><p class="flavor-desc">Lemon</p></div>
+      <div class="flavor-card"><p class="flavor-name">Strawberry Cheese</p><p class="flavor-desc">Strawberry Cheesecake</p></div>
+      <div class="flavor-card"><p class="flavor-name">Blueberry Cheesecake</p><p class="flavor-desc">Blueberry Cheesecake</p></div>
+      <div class="flavor-card"><p class="flavor-name">Cinnaball</p><p class="flavor-desc">Cinnamon Cookie</p></div>
+      <div class="flavor-card"><p class="flavor-name">Ginger Man</p><p class="flavor-desc">Gingerbread</p></div>
+      <div class="flavor-card"><p class="flavor-name">Hot Cocoa</p><p class="flavor-desc">Chocolate + Marshmallow</p></div>
+      <div class="flavor-card"><p class="flavor-name">Coffee</p><p class="flavor-desc">Coffee</p></div>
+      <div class="flavor-card"><p class="flavor-name">Cranberry</p><p class="flavor-desc">Cranberry Cookie</p></div>
+      <div class="flavor-card"><p class="flavor-name">Hershey's Kisses</p><p class="flavor-desc">Kisses + Dark Chocolate</p></div>
+      <div class="flavor-card"><p class="flavor-name">Choco Chips</p><p class="flavor-desc">Chocolate + Potato Chips</p></div>
+      <div class="flavor-card"><p class="flavor-name">Choco Crispy</p><p class="flavor-desc">Chocolate + Rice Crispy</p></div>
+      <div class="flavor-card"><p class="flavor-name">Pumpkin Spice</p><p class="flavor-desc">Pumpkin Spice</p></div>
+      <div class="flavor-card"><p class="flavor-name">Rainbow</p><p class="flavor-desc">White Chocolate + Rainbow Sprinkles</p></div>
+      <div class="flavor-card"><p class="flavor-name">Marble</p><p class="flavor-desc">White + Milk Chocolate</p></div>
+      <div class="flavor-card"><p class="flavor-name">Almond Coconut</p><p class="flavor-desc">Almond Coconut</p></div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <div id="pricing">
+    <div class="inner">
+      <p class="section-label">Pricing</p>
+      <h2 class="section-title" style="color:var(--white);">Choose Your Tray</h2>
+
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <p class="pricing-label">Regular Tray</p>
+          <p class="pricing-name">The Classic</p>
+          <p class="pricing-price">$15</p>
+          <p class="pricing-qty">15 brigadeiros</p>
+          <p class="pricing-note">Perfect for a personal treat or a small group. Message us to place your order.</p>
+          <a href="https://wa.me/14312755071?text=Hi!%20I'd%20like%20to%20order%20a%20Regular%20Tray%20(15%20brigadeiros)." class="btn-white" target="_blank">Order Now</a>
+        </div>
+        <div class="pricing-card featured">
+          <span class="pricing-badge">Order Ahead</span>
+          <p class="pricing-label">Party Tray</p>
+          <p class="pricing-name">The Party</p>
+          <p class="pricing-price">$60</p>
+          <p class="pricing-qty">65 brigadeiros</p>
+          <p class="pricing-note">Order ahead required. Perfect for events, gatherings, or gifting. Contact us early to schedule.</p>
+          <a href="https://wa.me/14312755071?text=Hi!%20I'd%20like%20to%20order%20a%20Party%20Tray%20(65%20brigadeiros)." class="btn-black" target="_blank">Order Ahead</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORDER -->
+  <section id="order">
+    <p class="section-label">How It Works</p>
+    <h2 class="section-title">Simple as 1, 2, 3.</h2>
+
+    <div class="order-grid">
+      <div class="order-intro">
+        <p class="section-body">No complicated forms. Just message us directly — we'll handle the rest.</p>
+        <br>
+        <a href="https://wa.me/14312755071?text=Hi!%20I'd%20like%20to%20place%20an%20order." class="btn-rust" target="_blank" style="margin-top:8px;">Text or WhatsApp Us</a>
+      </div>
+      <div class="order-steps">
+        <div class="step">
+          <p class="step-num">01</p>
+          <div>
+            <p class="step-title">Send Us a Message</p>
+            <p class="step-body">Text or WhatsApp us. Tell us which tray, how many, and which flavors — we'll confirm what's available this week.</p>
+          </div>
+        </div>
+        <div class="step">
+          <p class="step-num">02</p>
+          <div>
+            <p class="step-title">Confirm Your Order</p>
+            <p class="step-body">We'll lock in your flavors, quantity, and pickup time. Party trays need advance notice — message us early.</p>
+          </div>
+        </div>
+        <div class="step">
+          <p class="step-num">03</p>
+          <div>
+            <p class="step-title">Pay &amp; Pick Up</p>
+            <p class="step-body">Cash or e-transfer. Pick up fresh and enjoy.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div>
+      <p class="footer-logo">The <em>BRIGS</em></p>
+      <p style="margin-top:8px;">Handcrafted Brigadeiros · Winnipeg, MB</p>
+      <p>By Igor Santanna</p>
+    </div>
+    <p style="font-size:0.65rem; opacity:0.5; color: var(--muted);">Site by <a href="https://fjdmedia.github.io/FJMedia" target="_blank" style="color: var(--rust); text-decoration: none; font-weight: 700;">FJMedia</a></p>
+  </footer>
+
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileNav = document.getElementById('mobileNav');
+    menuBtn.addEventListener('click', () => mobileNav.classList.toggle('open'));
+    function closeMobileNav() { mobileNav.classList.remove('open'); }
+  </script>
+
+</body>
+</html>
