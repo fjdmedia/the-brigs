@@ -9,12 +9,12 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --black:      #0F0500;
-      --off-white:  #1E0A00;
+      --black:      #0A0300;   /* deepest — footer, hero-left, pricing */
+      --off-white:  #150800;   /* base body bg */
       --rust:       #C9A227;
       --rust-light: #E8C76A;
-      --sand:       #2A1200;
-      --muted:      #9E8A70;
+      --sand:       #2C1500;   /* card/raised surface — clearly distinct from body */
+      --muted:      #B09A7E;   /* secondary text — lighter/warmer for readability */
       --white:      #F5ECD7;
     }
 
@@ -37,8 +37,8 @@
       align-items: center;
       justify-content: space-between;
       padding: 20px 48px;
-      background: var(--off-white);
-      border-bottom: 1px solid rgba(201,162,39,0.15);
+      background: var(--black);
+      border-bottom: 1px solid rgba(201,162,39,0.2);
     }
 
     .nav-logo {
@@ -103,8 +103,8 @@
       position: fixed;
       top: 65px;
       left: 0; right: 0;
-      background: var(--off-white);
-      border-bottom: 1px solid rgba(201,162,39,0.15);
+      background: var(--black);
+      border-bottom: 1px solid rgba(201,162,39,0.2);
       padding: 12px 0;
       z-index: 99;
     }
@@ -275,7 +275,7 @@
 
     /* ── TICKER ── */
     .ticker {
-      background: var(--black);
+      background: var(--rust);
       padding: 14px 0;
       overflow: hidden;
       white-space: nowrap;
@@ -291,11 +291,11 @@
       font-weight: 700;
       letter-spacing: 3px;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.4);
+      color: rgba(10,3,0,0.7);
       margin-right: 40px;
     }
 
-    .ticker-inner span.dot { color: var(--rust); margin-right: 40px; }
+    .ticker-inner span.dot { color: rgba(10,3,0,0.4); margin-right: 40px; }
 
     @keyframes ticker {
       0%   { transform: translateX(0); }
@@ -315,6 +315,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      border-right: 1px solid rgba(201,162,39,0.2);
     }
 
     .section-label {
@@ -342,12 +343,11 @@
     }
 
     .what-right {
-      background: var(--off-white);
+      background: var(--black);
       padding: 80px 56px;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      border-left: 1px solid rgba(13,13,13,0.08);
     }
 
     .allergy-item {
@@ -425,18 +425,18 @@
     .flavor-card {
       background: var(--sand);
       padding: 20px 22px;
-      border: 1px solid transparent;
+      border: 1px solid rgba(201,162,39,0.12);
       transition: background 0.2s, border-color 0.2s;
       cursor: default;
     }
 
     .flavor-card:hover {
-      background: var(--rust);
-      border-color: var(--rust);
+      background: rgba(201,162,39,0.18);
+      border-color: rgba(201,162,39,0.5);
     }
 
-    .flavor-card:hover .flavor-name { color: var(--black); }
-    .flavor-card:hover .flavor-desc { color: var(--black); }
+    .flavor-card:hover .flavor-name { color: var(--rust-light); }
+    .flavor-card:hover .flavor-desc { color: var(--white); }
 
     .flavor-name {
       font-family: 'DM Serif Display', serif;
@@ -477,14 +477,14 @@
     }
 
     .pricing-card {
-      background: rgba(255,255,255,0.04);
+      background: rgba(201,162,39,0.06);
       padding: 52px 48px;
-      border: 1px solid rgba(255,255,255,0.08);
+      border: 1px solid rgba(201,162,39,0.2);
       position: relative;
       transition: background 0.2s;
     }
 
-    .pricing-card:hover { background: rgba(255,255,255,0.07); }
+    .pricing-card:hover { background: rgba(201,162,39,0.1); }
 
     .pricing-card.featured {
       background: var(--rust);
@@ -564,7 +564,7 @@
       transition: background 0.2s;
     }
 
-    .btn-white:hover { background: var(--off-white); }
+    .btn-white:hover { background: #e0d4be; }
 
     .btn-black {
       background: var(--black);
@@ -608,11 +608,11 @@
       grid-template-columns: 60px 1fr;
       gap: 24px;
       padding: 28px 0;
-      border-bottom: 1px solid rgba(201,162,39,0.15);
+      border-bottom: 1px solid rgba(201,162,39,0.2);
       align-items: start;
     }
 
-    .step:first-child { border-top: 1px solid rgba(201,162,39,0.15); }
+    .step:first-child { border-top: 1px solid rgba(201,162,39,0.2); }
 
     .step-num {
       font-family: 'DM Serif Display', serif;
@@ -915,6 +915,13 @@
     menuBtn.addEventListener('click', () => mobileNav.classList.toggle('open'));
     function closeMobileNav() { mobileNav.classList.remove('open'); }
   </script>
+
+  <!-- PRESENTATION BAR -->
+  <div style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:999;display:flex;align-items:center;gap:12px;background:#0F0500;border:1px solid rgba(201,162,39,0.4);border-radius:99px;padding:10px 20px;box-shadow:0 4px 24px rgba(0,0,0,0.4);">
+    <a href="Website_2.html" style="font-size:0.75rem;font-weight:700;color:#F5ECD7;text-decoration:none;font-family:'DM Sans',sans-serif;letter-spacing:1px;transition:color 0.2s;" onmouseover="this.style.color='#C9A227'" onmouseout="this.style.color='#F5ECD7'">← Prev</a>
+    <div style="width:1px;height:16px;background:rgba(201,162,39,0.3);"></div>
+    <span style="font-size:0.7rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#C9A227;font-family:'DM Sans',sans-serif;">Design 3 of 3</span>
+  </div>
 
 </body>
 </html>
